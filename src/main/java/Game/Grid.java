@@ -19,8 +19,8 @@ public class Grid implements IGrid, Serializable {
     private int width;
 
     public ServerTCP GameServer;
-    private IAskPlay StrategyPlay;
-    private IAskTurn StrategyTurn;
+    private transient IAskPlay StrategyPlay;
+    private transient IAskTurn StrategyTurn;
 
     private int height;
     private ArrayList<Column> grid;

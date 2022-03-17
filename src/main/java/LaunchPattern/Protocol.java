@@ -30,11 +30,13 @@ public class Protocol implements IProtocol {
                     int columnNumber = Integer.parseInt(messages[1]);
 
                     grid.askPlay(columnNumber+1, "red");
+                    outputStream.println("Played: red " + columnNumber);
                 }
                 if (messages[0].contentEquals("yellow")) {
                     int columnNumber = Integer.parseInt(messages[1]);
 
                     grid.askPlay(columnNumber+1, "yellow");
+                    outputStream.println("Played: yellow " + columnNumber);
                 }
                 if (messages[0].contentEquals("MyTurnToPlay?")) {
                     String currentTurn = grid.askTurn();
@@ -46,7 +48,7 @@ public class Protocol implements IProtocol {
                 if (messages[0].contentEquals("GiveMeTheGrid")) {
 
                     // send it to the client
-                    objectOutputStream.writeObject(grid.getGrid());
+                    objectOutputStream.writeObject(grid);
                     grid.display_grid();
                 }
             }

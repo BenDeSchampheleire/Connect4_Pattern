@@ -11,13 +11,13 @@ import java.net.Socket;
  */
 public class ServerTCP implements Serializable{
 
-    private static int nbConnections = 0;
+    private int nbConnections = 0;
     private int nbConnectionsMax;
 
-    private Socket clientSocket;
+    private transient Socket clientSocket;
 
-    private IContext context;
-    private IProtocol protocol;
+    private transient IContext context;
+    private transient IProtocol protocol;
 
     private final int numberPort;
 
@@ -33,6 +33,7 @@ public class ServerTCP implements Serializable{
     }
 
     public void go() {
+
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(numberPort);
@@ -52,6 +53,7 @@ public class ServerTCP implements Serializable{
                 System.exit(1);
             }
             Process process = new Process(clientSocket,this);
+            process.start();
         }
 
         /*try {
