@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="369.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.Controller">
+   <children>
+      <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@./img/IntroScreen.jpg" />
+         </image>
+      </ImageView>
+      <Button fx:id="buttonStart" alignment="CENTER" contentDisplay="CENTER" layoutX="198.0" layoutY="240.0" mnemonicParsing="false" onAction="#changeScene" style="-fx-background-color: #FFFFFF;" text="Start" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Button>
+      <Button fx:id="buttonQuit" alignment="CENTER" contentDisplay="CENTER" layoutX="320.0" layoutY="240.0" mnemonicParsing="false" onAction="#quitWindow" style="-fx-background-color: #FFFFFF;" text="Quit" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
