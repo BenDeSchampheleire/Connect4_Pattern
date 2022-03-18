@@ -42,10 +42,12 @@ public class Controller implements PropertyChangeListener {
 
         // listen to the Server
         automate.connectGame();
+        automate.assignColor();
         this.grid = automate.askGrid(); // get the grid from the Server
-        automate.setColor( this.grid.GameServer.giveColor() );
-        System.out.println("Automate color: " + this.grid.GameServer.giveColor());
-        automate.deconnectGame();
+        //String automate_color = this.grid.GameServer.giveColor();
+        //automate.setColor(automate_color);
+        System.out.println("Automate color: " + automate.getColor());
+        //automate.deconnectGame();
 
         if (this.grid == null) {
             System.out.println("Launch the Server");
@@ -193,11 +195,11 @@ public class Controller implements PropertyChangeListener {
                 checkerPreview.setOnMouseEntered(arg0 -> {
 
                     // connect to the game
-                    automate.connectGame();
+                    //automate.connectGame();
 
                     // if it is his turn to play
                     boolean myTurn = automate.askTurn();
-                    automate.deconnectGame();
+                   // automate.deconnectGame();
                     if (myTurn) {
                         System.out.println("your turn");
                         if (Objects.equals(automate.getColor(), "red")) {
@@ -215,23 +217,23 @@ public class Controller implements PropertyChangeListener {
 
                 checkerPreview.setOnMouseClicked(arg0 -> {
                     // connect to the game
-                    automate.connectGame();
+                   // automate.connectGame();
                     // if it is his turn to play
                     boolean myTurn;
                     myTurn = automate.askTurn();
-                    automate.deconnectGame();
+                    //automate.deconnectGame();
                     if (myTurn) {
-                        automate.connectGame();
+                        //automate.connectGame();
                         automate.askPlay(column.getId(), automate.getColor(),gridPane);
                     }
                     else {
                         System.out.println("It is not your turn to play");
                     }
-                    automate.deconnectGame();
+                    //automate.deconnectGame();
 
-                    automate.connectGame();
+                   // automate.connectGame();
                     this.grid = automate.askGrid();
-                    automate.deconnectGame();
+                    //automate.deconnectGame();
 
                     // drawGrid(gridPane,this.grid);
 
@@ -292,9 +294,9 @@ public class Controller implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
 
         if (evt.getPropertyName() == "Played") {
-            automate.connectGame();
+            //automate.connectGame();
             this.grid = automate.askGrid();
-            automate.deconnectGame();
+            //automate.deconnectGame();
 
             GridPane gridPane = (GridPane) evt.getOldValue();
             drawGrid(gridPane,this.grid);

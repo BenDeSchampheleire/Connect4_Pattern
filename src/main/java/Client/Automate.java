@@ -4,7 +4,6 @@ import Game.Grid;
 import javafx.scene.layout.GridPane;
 
 import java.beans.PropertyChangeSupport;
-import java.util.Objects;
 
 public class Automate implements IAutomate{
 
@@ -47,9 +46,9 @@ public class Automate implements IAutomate{
         notifier.firePropertyChange("Played",gridPane,null);
     }
 
-    public String demandeColor() {
+    public String assignColor() {
 
-        System.out.println("****** demande color ********");
+        System.out.println("****** Ask color ********");
 
         String color = myClientTCP.transmitCommand("GiveMeAColor");
         setColor(color);
@@ -64,15 +63,16 @@ public class Automate implements IAutomate{
         String color = myClientTCP.transmitCommand("MyTurnToPlay?");
 
         // true if it is his turn to play, false otherwise
-        return Objects.equals(color, this.getColor());
+        return color.contains(this.getColor());
     }
 
     public Grid askGrid() {
-        Grid grid;
+        Grid grid = new Grid(0,0);
         System.out.println("****** Ask grid ********");
 
-        grid = myClientTCP.transmitGrid("GiveMeTheGrid");
-
+//        grid = myClientTCP.transmitGrid("GiveMeTheGrid");
+        String string = myClientTCP.transmitCommand("GiveMeTheGrid");
+        grid = grid.toGrid(string);
         return grid;
     }
 }

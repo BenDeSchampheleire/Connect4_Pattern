@@ -12,7 +12,7 @@ import java.net.Socket;
 public class ServerTCP implements Serializable{
 
     private int nbConnections = 0;
-    private int nbConnectionsMax;
+    private final int nbConnectionsMax;
 
     private transient Socket clientSocket;
 
@@ -23,7 +23,7 @@ public class ServerTCP implements Serializable{
 
     public ServerTCP(int numberPort) {
         this.numberPort = numberPort;
-        this.nbConnectionsMax = 100;
+        this.nbConnectionsMax = 2;
     }
 
     public ServerTCP(IContext context, IProtocol protocol, int numberPort) {
@@ -42,7 +42,7 @@ public class ServerTCP implements Serializable{
             System.exit(1);
         }
 
-        while (true) {
+        while (nbConnections <= nbConnectionsMax) {
             try {
                 System.out.println("Server is waiting for a client");
                 System.out.println("Current number of clients: " + nbConnections);
@@ -62,6 +62,10 @@ public class ServerTCP implements Serializable{
         } catch (IOException e) {
             System.out.println("Could not close");
         }*/
+    }
+
+    public int getNbConnections() {
+        return nbConnections;
     }
 
     public String giveColor() {

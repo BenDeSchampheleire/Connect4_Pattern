@@ -17,13 +17,12 @@ import org.junit.Assert;
 public class Grid implements IGrid, Serializable {
 
     private int width;
+    private int height;
+    private ArrayList<Column> grid;
 
     public ServerTCP GameServer;
     private transient IAskPlay StrategyPlay;
     private transient IAskTurn StrategyTurn;
-
-    private int height;
-    private ArrayList<Column> grid;
 
     private String turn;
 
@@ -101,6 +100,65 @@ public class Grid implements IGrid, Serializable {
             System.out.println("\n---------------");
         }
         System.out.println("1 2 3 4 5 6 7");
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder string = new StringBuilder();
+        for (int col = 0; col < this.getWidth(); col++) {
+
+            Column column = this.getGrid().get(col);
+
+            for (int row = 0; row < this.getHeight(); row++) {
+                Checker checker = column.getColumn().get( this.getHeight() - 1 - row );
+
+                string.append(checker.getColor()).append(",");
+            }
+
+            string.append("|");
+
+            }
+        string.append(this.getTurn());
+        return string.toString();
+    }
+
+    public int countMatch(String input, String match) {
+        int index = input.indexOf(match);
+        int count = 0;
+        while (index != -1) {
+            count++;
+            input = input.substring(index + 1);
+            index = input.indexOf(match);
+        }
+        return count;
+    }
+
+    public Grid toGrid(String string) {
+
+        int width = countMatch(string,"|");
+        int height = countMatch(string,",") / width;
+
+        Grid grid = new Grid(width, height);
+
+        String[] parts = string.split(",");
+
+        for (int col = 0; col < width; col++) {
+
+            Column column = grid.getGrid().get(col);
+
+            for (int row = 0; row < height; row++) {
+                Checker checker = column.getColumn().get( grid.getHeight() - 1 - row );
+
+                if (parts[row + height*col].contains("red")) {
+                    checker.setColor("red");
+
+                } else if (parts[row + height*col].contains("yellow")) {
+                    checker.setColor("yellow");
+
+                }
+            }
+        }
+        return grid;
     }
 
     /**
@@ -282,6 +340,16 @@ public class Grid implements IGrid, Serializable {
         }
         else {
             color = "yellow";
+        }
+        return color;
+    }
+
+    public String giveColor() {
+        String color = this.turn;
+        if (color.equals("red")) {
+            this.turn = "yellow";
+        } else if (color.equals("yellow")) {
+            this.turn = "red";
         }
         return color;
     }
