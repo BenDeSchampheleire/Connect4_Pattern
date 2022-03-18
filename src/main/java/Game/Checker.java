@@ -1,24 +1,16 @@
 package Game;
 
-import java.io.Serializable;
-
 /**
- * This class represents the checkers
- *
+ * <h1>Checker</h1>
+ * Represents a Checker, characterized by a color and a position in a certain {@link Column}.
+ * @see Column
+ * @see Grid
  */
-public class Checker implements Serializable {
+public class Checker {
 
-
-    private int position;
+    private final int position;
     private String color;
 
-    /**
-     * Creates a checker object.
-     *
-     * @param position: index of the checker in the column
-     * @param color: color of the checker
-     *
-     */
     public Checker(int position, String color) {
 
         this.position = position;
@@ -29,10 +21,6 @@ public class Checker implements Serializable {
         return position;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
     public String getColor() {
         return color;
     }
@@ -41,15 +29,4 @@ public class Checker implements Serializable {
         this.color = color;
     }
 
-    public void display_checker() {
-        if (this.getColor().equals("yellow")) {
-            System.out.print("y");
-        }
-        else if (this.getColor().equals("red")) {
-            System.out.print("r");
-        }
-        else {
-            System.out.print(".");
-        }
-    }
 }

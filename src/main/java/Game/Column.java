@@ -1,29 +1,20 @@
 package Game;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
 /**
- * This class represents a column
- *
+ * <h1>Column</h1>
+ * Represents a Column, characterized by an identification number and a height. Also contains an Arraylist filled with blank {@link Checker}s.
+ * @see Checker
+ * @see Grid
  */
-public class Column implements Serializable {
+public class Column {
 
+    private final int id;
+    private final int height;
+    private final ArrayList<Checker> column;
 
-    private int id;
-    private int height;
-    private ArrayList<Checker> column;
-
-    /**
-     * Creates a column object.
-     * A column has a list of checkers.
-     * It is initialized with blank checkers.
-     *
-     * @param id: index of the column in the grid
-     * @param height: size of the column
-     *
-     */
     public Column(int id, int height) {
 
         this.id = id;
@@ -39,43 +30,17 @@ public class Column implements Serializable {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public ArrayList<Checker> getColumn() {
         return column;
     }
 
-    public void setColumn(ArrayList<Checker> column) {
-        this.column = column;
-    }
-
     /**
-     * This method checks is the column if empty
+     * Checks is the column if full.
      *
-     * @return true if the column is empty
+     * @return true/false
      */
-    public boolean check_empty() {
-
-        return this.column.isEmpty();
-    }
-
-    /**
-     * This method checks is the column if full
-     *
-     * @return true if the column is full
-     */
-    public boolean check_full() {
+    public boolean checkFull() {
 
         return !Objects.equals(this.getColumn().get(this.height - 1).getColor(), "blank");
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
     }
 }

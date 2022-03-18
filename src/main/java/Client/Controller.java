@@ -24,15 +24,15 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * This class represents the graphical interface
- * And handles the unfolding of the game
+ * <h1>Controller</h1>
+ * Manages the graphical interface and is instantiated by {@link GameApplication#start(Stage)}.
+ * Handles the correct functioning of the game itself.
  *
  */
 public class Controller implements PropertyChangeListener {
 
     public Automate automate;
     private Grid grid;
-    boolean update;
 
     public Controller() {
 
@@ -42,21 +42,16 @@ public class Controller implements PropertyChangeListener {
 
         // listen to the Server
         automate.connectGame();
+        // assign a color to the automate (red or yellow)
         automate.assignColor();
-        this.grid = automate.askGrid(); // get the grid from the Server
-        //String automate_color = this.grid.GameServer.giveColor();
-        //automate.setColor(automate_color);
-        System.out.println("Automate color: " + automate.getColor());
-        //automate.deconnectGame();
+        // get the grid from the Server
+        this.grid = automate.askGrid();
 
         if (this.grid == null) {
             System.out.println("Launch the Server");
         }
 
         automate.getNotifier().addPropertyChangeListener(this);
-
-        this.update = false;
-
     }
 
     @FXML
@@ -65,6 +60,9 @@ public class Controller implements PropertyChangeListener {
     @FXML
     private Button buttonQuit;
 
+    /**
+     * This method is called when the button <b>Quit</b> is clicked. Exits the graphical interface.
+     */
     @FXML
     protected void quitWindow() {
 
@@ -72,6 +70,9 @@ public class Controller implements PropertyChangeListener {
         stage.close();
     }
 
+    /**
+     * This method is called when the button <b>Start</b> is clicked. Changes the Welcome-screen to the game's board.
+     */
     public void changeScene() {
 
         Scene scene = this.buttonQuit.getScene();
@@ -83,9 +84,9 @@ public class Controller implements PropertyChangeListener {
     }
 
     /**
-     *
-     * @param scene: scene where the screen is displayed
-     *        winner: color of the winner's team
+     * This method is called when the game is won by a player. Changes the game's board to the Win-Screen.
+     * @param scene scene of the game's board
+     * @param winner color of the winner
      *
      */
     public void winScreen(Scene scene, String winner) throws IOException {
@@ -94,16 +95,15 @@ public class Controller implements PropertyChangeListener {
         vbox.setSpacing(30);
         vbox.setAlignment(Pos.CENTER);
 
-        Label congrats = new Label("Congratulations");
-        congrats.setFont(new Font("Arial",48));
-        vbox.getChildren().add(congrats);
-
         Label playerName = new Label();
         playerName.setFont(new Font("Arial",48));
         vbox.getChildren().add(playerName);
 
-        scene.setRoot(vbox);
+        Label congrats = new Label("Congratulations");
+        congrats.setFont(new Font("Arial",48));
+        vbox.getChildren().add(congrats);
 
+        scene.setRoot(vbox);
 
         switch (winner) {
             case "red" -> {
@@ -120,10 +120,10 @@ public class Controller implements PropertyChangeListener {
     }
 
     /**
-     * This method draws the board on which the game takes place
+     * This method draws the board where the game takes place.
      *
-     * @param stage: stage on which the board is displayed
-     *        grid: the grid object, used to know the number of rows and columns to draw
+     * @param stage stage on which the board is displayed
+     * @param grid the Grid object, needed to know the number of rows and columns to draw
      *
      */
     public void drawBoard(Stage stage, Grid grid) {
@@ -157,10 +157,10 @@ public class Controller implements PropertyChangeListener {
     }
 
     /**
-     * This method handles the unfolding of the game and the behavior of the grid's cases
+     * This method handles the functional aspect of the game, <i>i.e.</i> the behavior of the grid's (empty) cells.
      *
-     * @param gridPane: the visual grid
-     *        grid: the grid object
+     * @param gridPane the pane where the grid is drawn
+     * @param grid the grid object that needs to be drawn
      *
      */
     private void drawGrid(final GridPane gridPane, Grid grid){
@@ -194,14 +194,9 @@ public class Controller implements PropertyChangeListener {
                 // displays a red or yellow preview checker whenever the player puts the mouse on a playable cell
                 checkerPreview.setOnMouseEntered(arg0 -> {
 
-                    // connect to the game
-                    //automate.connectGame();
-
                     // if it is his turn to play
                     boolean myTurn = automate.askTurn();
-                   // automate.deconnectGame();
                     if (myTurn) {
-                        System.out.println("your turn");
                         if (Objects.equals(automate.getColor(), "red")) {
                             checkerPreview.setFill(Color.RED);
                         } else {
@@ -214,29 +209,20 @@ public class Controller implements PropertyChangeListener {
                 // removes the preview checker whenever the player takes the mouse off the cell
                 checkerPreview.setOnMouseExited(arg0 -> checkerPreview.setFill(Color.TRANSPARENT));
 
-
+                // when the player clicks on a playable cell
                 checkerPreview.setOnMouseClicked(arg0 -> {
-                    // connect to the game
-                   // automate.connectGame();
+
                     // if it is his turn to play
-                    boolean myTurn;
-                    myTurn = automate.askTurn();
-                    //automate.deconnectGame();
+                    boolean myTurn = automate.askTurn();
                     if (myTurn) {
-                        //automate.connectGame();
+                        // ask to play on the grid of the Server
                         automate.askPlay(column.getId(), automate.getColor(),gridPane);
                     }
                     else {
                         System.out.println("It is not your turn to play");
                     }
-                    //automate.deconnectGame();
 
-                   // automate.connectGame();
-                    this.grid = automate.askGrid();
-                    //automate.deconnectGame();
-
-                    // drawGrid(gridPane,this.grid);
-
+                    // check if the game is finished
                     switch ( this.grid.EndOfGame() ) {
                         case "red" -> {
                             try {
@@ -286,17 +272,15 @@ public class Controller implements PropertyChangeListener {
     }
 
     /**
-     * Cette méthode est appelée quand l'objet Observable fait appel à notifyObservers()
+     * This method is called when a PropertyChangeSupport was fired. In this case, clicking on a playable cell makes the automate fire a PropertyChange.
      *
-     * Quand le serveur a joué il notifie les interfaces graphiques pour qu'elles se mettent à jour
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
 
-        if (evt.getPropertyName() == "Played") {
-            //automate.connectGame();
+        if (Objects.equals(evt.getPropertyName(), "Played")) {
+
             this.grid = automate.askGrid();
-            //automate.deconnectGame();
 
             GridPane gridPane = (GridPane) evt.getOldValue();
             drawGrid(gridPane,this.grid);

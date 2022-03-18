@@ -11,13 +11,19 @@ import ServerPattern.ServerTCP;
 import org.junit.Assert;
 
 /**
- * This class represents the grid
+ * <h1>Grid</h1>
+ * Represents the object Grid, containing: <br>
+ * - an ArrayList of ({@link Column}s) <br>
+ * - a certain width (number of Columns) and height (size of the Columns) <br>
+ * - a TCP Server ({@link ServerTCP}) <br>
+ * - different Strategies (Interfaces) <br>
+ * - a turn indicator (red or yellow)
  *
  */
 public class Grid implements IGrid, Serializable {
 
-    private int width;
-    private int height;
+    private final int width;
+    private final int height;
     private ArrayList<Column> grid;
 
     public ServerTCP GameServer;
@@ -26,24 +32,16 @@ public class Grid implements IGrid, Serializable {
 
     private String turn;
 
-    /**
-     * Creates a grid object
-     * A grid has a list of columns
-     *
-     * @param width: number of columns
-     *        height: size of the columns
-     *
-     */
+
     public Grid(int width, int height) {
 
         GameServer = new ServerTCP(this, new Protocol(), 6666);
-        //GameServer.setGrid(this);
 
         this.width = width;
         this.height = height;
         this.grid = new ArrayList<>(width);
 
-        // Initialised to "red" since it is the first team to play
+        // Initialised to "red" since it is the first team to play (choice)
         this.turn = "red";
 
         for (int i = 0; i < this.width; i++) {
@@ -66,16 +64,8 @@ public class Grid implements IGrid, Serializable {
         return width;
     }
 
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
     public int getHeight() {
         return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
     }
 
     public ArrayList<Column> getGrid() {
@@ -86,22 +76,10 @@ public class Grid implements IGrid, Serializable {
         this.grid = grid;
     }
 
-    public void display_grid() {
-
-        System.out.println("1 2 3 4 5 6 7");
-        System.out.println("---------------");
-
-        for (int row = this.height - 1; row >= 0; row--) {
-            System.out.print("|");
-            for (int col = 0; col < this.width; col++) {
-                grid.get(col).getColumn().get(row).display_checker();
-                System.out.print("|");
-            }
-            System.out.println("\n---------------");
-        }
-        System.out.println("1 2 3 4 5 6 7");
-    }
-
+    /**
+     * This method allows to transform a Grid into a String representation, which is easily sent from the Server.
+     * @return String representation
+     */
     @Override
     public String toString() {
         StringBuilder string = new StringBuilder();
@@ -118,10 +96,13 @@ public class Grid implements IGrid, Serializable {
             string.append("|");
 
             }
-        string.append(this.getTurn());
         return string.toString();
     }
 
+    /**
+     * This method counts the number of occurrences of a certain subString in a String.
+     * @return number of occurrences
+     */
     public int countMatch(String input, String match) {
         int index = input.indexOf(match);
         int count = 0;
@@ -133,6 +114,11 @@ public class Grid implements IGrid, Serializable {
         return count;
     }
 
+    /**
+     * This method allows to transform the String representation of a Grid into a Grid object.
+     * Hence, received Strings from the Server to be transformed in Grid objects.
+     * @return Grid object
+     */
     public Grid toGrid(String string) {
 
         int width = countMatch(string,"|");
@@ -162,25 +148,21 @@ public class Grid implements IGrid, Serializable {
     }
 
     /**
-     * This method puts a checker of a given color in the specified column
+     * This method puts a ({@link Checker}) of a given color in the specified ({@link Column}) of the Grid.
      *
-     * @param column_number: number of the column to put the checker in
-     *        color: checker's color
+     * @param column_number number of the Column to put the Checker in
+     * @param color Checker's color
      *
      */
-
-
-    public void play_checker(int column_number, String color) {
+    public void playChecker(int column_number, String color) {
 
         Assert.assertTrue(1 <= column_number && column_number <= this.width);
 
         Column column = this.getGrid().get(column_number - 1);
-        Checker checkerSave = null;
         for (int i = 0; i < this.height; i++) {
             Checker checker = column.getColumn().get(i);
             if (checker.getColor().equals("blank")) {
                 checker.setColor(color);
-                checkerSave = checker;
                 break;
             }
         }
@@ -191,29 +173,28 @@ public class Grid implements IGrid, Serializable {
         else {
             setTurn("red");
         }
-
-        display_grid();
-
-        // notifie l'interface graphique que la grille a changé
-        // on envoie le pion a modifier et sa couleur
-        //GameServer.getNotifier().firePropertyChange("iPlayed", checkerSave , color);
-
     }
 
+    /**
+     * Links with the method {@link IAskPlay#askPlay(int, String, IGrid)} from the Interface {@link IAskPlay}.
+     * @see "Pattern Strategy"
+     */
     public synchronized void askPlay(int column, String color) {
         StrategyPlay.askPlay(column, color, this);
     }
 
+    /**
+     * Links with the method {@link IAskTurn#askTurn(IGrid)} from the Interface {@link IAskTurn}.
+     * @see "Pattern Strategy"
+     */
     public synchronized String askTurn() {
         return StrategyTurn.askTurn(this);
     }
 
     /**
-     * This method checks if the team of the given color has won
-     *
-     * @param color: color of the team
-     *
-     * @return true if the team has won
+     * This method checks if the player of the given color has won on a Grid.
+     * @param color color of the player
+     * @return true/false
      */
     public boolean checkWin(String color) {
 
@@ -268,15 +249,14 @@ public class Grid implements IGrid, Serializable {
     }
 
     /**
-     * This method checks if the grid is full
-     *
-     * @return true is the grid is full
+     * This method checks if the grid is full.
+     * @return true/false
      */
     public boolean boardFull() {
 
         boolean full = true;
         for (int col = 0; col < this.width; col++) {
-            if ( !this.getGrid().get(col).check_full() ) {
+            if ( !this.getGrid().get(col).checkFull() ) {
                 full = false;
             }
         }
@@ -284,9 +264,8 @@ public class Grid implements IGrid, Serializable {
     }
 
     /**
-     * This method checks the state of the game
-     *
-     * @return the color of the winner's team
+     * This method checks if a player has won.
+     * @return red, yellow, nobody or ongoing
      */
     public String EndOfGame() {
 
@@ -304,34 +283,15 @@ public class Grid implements IGrid, Serializable {
     }
 
     /**
-     * This method starts the server that hosts the game
-     *
+     * This method starts the TCP Server that hosts the game.
      */
     public void startGame() {
         GameServer.go();
     }
 
     /**
-     * This method assigns a color to an automate
-     *
-     * @return the asigned color
-     */
-   /* public String assignColor() {
-        String color;
-        if (this.getNum() % 2 == 0) {
-            color = "red";
-        }
-        else {
-            color = "yellow";
-        }
-        setNum(getNum() + 1);
-        return color;
-    }*/
-
-    /**
-     * This method checks whose turn it is to play
-     *
-     * @return the color whose turn it is to play
+     * This method checks whose turn it is to play.
+     * @return red or yellow
      */
     public String playerTurn() {
         String color;
@@ -344,6 +304,10 @@ public class Grid implements IGrid, Serializable {
         return color;
     }
 
+    /**
+     * This method gives a color to an Automate ({@link Client.Automate}).
+     * @return red or yellow
+     */
     public String giveColor() {
         String color = this.turn;
         if (color.equals("red")) {

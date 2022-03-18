@@ -7,9 +7,19 @@ import ServerPattern.IProtocol;
 import java.io.*;
 import java.util.Arrays;
 
+/**
+ * <h1>Protocol</h1>
+ * Using a Protocol allows a more general implementation, which can be easily modified.
+ * @see "SOLID Principle"
+ */
 public class Protocol implements IProtocol {
 
-
+    /**
+     * Executes a certain context ({@link IContext}).
+     * Represents the Protocol from the Pattern.
+     * @param anInputStream
+     * @param anOutputStream
+     */
     @Override
     public void execute(IContext context, InputStream anInputStream, OutputStream anOutputStream) {
 
@@ -19,26 +29,28 @@ public class Protocol implements IProtocol {
         while (true) {
 
             try {
-                // create an object output stream, so we can send an object through it
+
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(anOutputStream);
 
                 BufferedReader bufferReader = new BufferedReader(new InputStreamReader(anInputStream));
                 PrintStream outputStream = new PrintStream(anOutputStream);
 
                 if ((inputReq = bufferReader.readLine()) != null) {
+
                     String[] messages = inputReq.split(" ");
                     System.out.println("Message received: " + Arrays.toString(messages));
+
                     if (messages[0].contentEquals("red")) {
                         int columnNumber = Integer.parseInt(messages[1]);
 
-                        grid.askPlay(columnNumber + 1, "red");
+                        grid.askPlay(columnNumber+1, "red");
                         outputStream.println("Played: red " + columnNumber);
                         outputStream.flush();
                     }
                     if (messages[0].contentEquals("yellow")) {
                         int columnNumber = Integer.parseInt(messages[1]);
 
-                        grid.askPlay(columnNumber + 1, "yellow");
+                        grid.askPlay(columnNumber+1, "yellow");
                         outputStream.println("Played: yellow " + columnNumber);
                         outputStream.flush();
                     }
@@ -60,14 +72,10 @@ public class Protocol implements IProtocol {
                     }
                     if (messages[0].contentEquals("GiveMeTheGrid")) {
 
+                        // send it to the client
                         outputStream.println(grid.toString());
                         outputStream.flush();
-                        System.out.println("Grid sent: " + grid.toString());
-
-                        // send it to the client
-//                        objectOutputStream.writeObject(grid);
-//                        objectOutputStream.reset();
-//                        grid.display_grid();
+                        System.out.println("Grid sent");
                     }
                 }
             } catch (IOException e) {

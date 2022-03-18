@@ -6,7 +6,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
- * Represents a ServerTCP, that listens a certain port number
+ * <h1>ServerTCP</h1>
+ * Represents a TCP Server that listens a certain port number.
  *
  */
 public class ServerTCP implements Serializable{
@@ -32,6 +33,9 @@ public class ServerTCP implements Serializable{
         this.protocol = protocol;
     }
 
+    /**
+     * Creates a Server Socket on a certain port and continues to accept Clients as long as the maximum number of Clients is not surpassed.
+     */
     public void go() {
 
         ServerSocket serverSocket = null;
@@ -56,23 +60,11 @@ public class ServerTCP implements Serializable{
             process.start();
         }
 
-        /*try {
+        try {
             serverSocket.close();
             this.nbConnections--;
         } catch (IOException e) {
             System.out.println("Could not close");
-        }*/
-    }
-
-    public int getNbConnections() {
-        return nbConnections;
-    }
-
-    public String giveColor() {
-        if (nbConnections % 2 == 0) {
-            return "red";
-        } else {
-            return "yellow";
         }
     }
 
