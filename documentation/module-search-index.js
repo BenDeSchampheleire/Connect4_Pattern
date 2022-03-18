@@ -1,0 +1,1 @@
+moduleSearchIndex = [{"l":"connect4_pattern"}];updateSearchResults();

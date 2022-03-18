@@ -1,0 +1,5 @@
+module:connect4_pattern
+Client
+Game
+LaunchPattern
+ServerPattern

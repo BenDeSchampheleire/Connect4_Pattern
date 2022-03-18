@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"connect4_pattern","l":"Client"},{"m":"connect4_pattern","l":"Game"},{"m":"connect4_pattern","l":"LaunchPattern"},{"m":"connect4_pattern","l":"ServerPattern"}];updateSearchResults();
