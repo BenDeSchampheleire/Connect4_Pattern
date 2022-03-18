@@ -1,10 +1,5 @@
 package Client;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.IOException;
-import java.util.Objects;
-
 import Game.Checker;
 import Game.Column;
 import Game.Grid;
@@ -22,6 +17,11 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.util.Objects;
 
 /**
  * This class represents the graphical interface
